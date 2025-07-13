@@ -1,0 +1,53 @@
+/website-root/
+│
+├── index.php              # Homepage
+├── contact.php            # Contact page
+├── about.php              # About page
+├── courses.php            # Main courses listing page
+│
+├── admin/                 # Admin panel
+│   ├── dashboard.php      # Admin dashboard
+│   ├── courses/           # Course management
+│   │   ├── list.php       # List all courses
+│   │   ├── add.php        # Add new course
+│   │   └── edit.php       # Edit course
+│   ├── messages/          # Contact messages
+│   │   └── list.php       # View messages
+│   ├── enrollments/       # Enrollment management
+│   │   └── list.php       # View enrollments
+│   ├── settings.php       # Site settings
+│   └── login.php          # Admin login
+│
+├── includes/              # PHP includes
+│   ├── config.php         # Database configuration
+│   ├── header.php         # Common header
+│   ├── footer.php         # Common footer
+│   ├── db.php             # Database functions
+│   ├── auth.php           # Authentication functions
+│   └── functions.php      # Utility functions
+│
+├── courses/               # Course detail pages
+│   ├── course1.php        # Project management course
+│   ├── course2.php        # Business communication course
+│   ├── course3.php        # Leadership course
+│   ├── course4.php        # Digital marketing course
+│   ├── course5.php        # Time management course
+│   └── course6.php        # Problem solving course
+│
+├── enrollment/            # Enrollment pages
+│   └── enroll.php         # Enrollment form
+│
+├── css/
+│   └── style.css          # Main stylesheet
+│
+├── js/
+│   ├── script.js          # Main JavaScript
+│   ├── navbar-scroll.js   # Navbar scrolling behavior
+│   ├── contact-form.js    # Contact form handling
+│   └── enrollment.js      # Enrollment form handling
+│
+├── img/                   # All images (same as before)
+│
+└── uploads/               # File uploads directory
+    ├── courses/           # Course images
+    └── testimonials/     # Testimonial images

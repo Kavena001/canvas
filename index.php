@@ -22,16 +22,40 @@ try {
 ?>
 
 <!---------------------------------- Banner Carousel -------------------------------------------->
-<div id="bannerCarousel" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-            <img src="<?= SITE_URL ?>/img/banner/banner1.jpg" class="d-block w-100" alt="Formation professionnelle">
-            <div class="carousel-caption d-none d-md-block">
-                <h2>Développez les compétences de votre équipe</h2>
-                <p>Formations professionnelles adaptées aux besoins de votre entreprise</p>
+<!-- Updated Carousel Section in index.php -->
+<div id="bannerCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+    <!-- Indicators -->
+    <div class="carousel-indicators">
+        <?php for ($i = 0; $i < 5; $i++): ?>
+            <button type="button" data-bs-target="#bannerCarousel" 
+                    data-bs-slide-to="<?= $i ?>" 
+                    class="<?= $i === 0 ? 'active' : '' ?>"></button>
+        <?php endfor; ?>
+    </div>
+
+    <div class="carousel-inner" style="height: 266px;"> <!-- Reduced height (33% less than 400px) -->
+        <!-- Slide 1 -->
+        <div class="carousel-item active" data-bs-interval="5000">
+            <img src="<?= SITE_URL ?>/img/banner/banner1.jpg" class="d-block w-100 h-100" 
+                 style="object-fit: cover;" alt="Formation professionnelle">
+            <div class="carousel-caption">
+                <h2 class="h4">Développez les compétences de votre équipe</h2>
+                <p class="d-none d-md-block">Formations professionnelles adaptées aux besoins de votre entreprise</p>
             </div>
         </div>
+        
+        <!-- Slides 2-5 would follow the same pattern -->
     </div>
+
+    <!-- Navigation Controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+        <span class="visually-hidden">Précédent</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+        <span class="visually-hidden">Suivant</span>
+    </button>
 </div>
 
 <!-- Featured Courses -->
