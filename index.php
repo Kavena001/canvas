@@ -1,8 +1,4 @@
 <?php
-// Enable full error reporting at the very top
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 require_once 'includes/config.php';
 require_once 'includes/db.php';
 require_once 'includes/header.php';
@@ -21,47 +17,110 @@ try {
 }
 ?>
 
-<!---------------------------------- Banner Carousel -------------------------------------------->
-<!-- Updated Carousel Section in index.php -->
-<div id="bannerCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
-    <!-- Indicators -->
+<!-- Main Carousel -->
+<div id="mainCarousel" class="carousel slide carousel-fade mb-4" data-bs-ride="carousel">
     <div class="carousel-indicators">
-        <?php for ($i = 0; $i < 5; $i++): ?>
-            <button type="button" data-bs-target="#bannerCarousel" 
-                    data-bs-slide-to="<?= $i ?>" 
-                    class="<?= $i === 0 ? 'active' : '' ?>"></button>
-        <?php endfor; ?>
+        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2"></button>
+        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="3"></button>
+        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="4"></button>
     </div>
 
-    <div class="carousel-inner" style="height: 266px;"> <!-- Reduced height (33% less than 400px) -->
+    <div class="carousel-inner" style="height: 400px;">
         <!-- Slide 1 -->
         <div class="carousel-item active" data-bs-interval="5000">
-            <img src="<?= SITE_URL ?>/img/banner/banner1.jpg" class="d-block w-100 h-100" 
-                 style="object-fit: cover;" alt="Formation professionnelle">
-            <div class="carousel-caption">
-                <h2 class="h4">Développez les compétences de votre équipe</h2>
-                <p class="d-none d-md-block">Formations professionnelles adaptées aux besoins de votre entreprise</p>
+            <img src="<?= SITE_URL ?>/img/banner/banner1.jpg" 
+                 class="d-block w-100 h-100"
+                 style="object-fit: cover;"
+                 alt="Professional Training">
+            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded">
+                <h3>Professional Training</h3>
+                <p>Enhance your team skills with our courses</p>
             </div>
         </div>
         
-        <!-- Slides 2-5 would follow the same pattern -->
+        <!-- Slide 2 -->
+        <div class="carousel-item" data-bs-interval="5000">
+            <img src="<?= SITE_URL ?>/img/banner/banner2.jpg" 
+                 class="d-block w-100 h-100"
+                 style="object-fit: cover;"
+                 alt="Certified Courses">
+            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded">
+                <h3>Certified Courses</h3>
+                <p>Get industry-recognized certifications</p>
+            </div>
+        </div>
+        
+        <!-- Slide 3 -->
+        <div class="carousel-item" data-bs-interval="5000">
+            <img src="<?= SITE_URL ?>/img/banner/banner3.jpg" 
+                 class="d-block w-100 h-100"
+                 style="object-fit: cover;"
+                 alt="Expert Instructors">
+            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded">
+                <h3>Expert Instructors</h3>
+                <p>Learn from industry professionals</p>
+            </div>
+        </div>
+        
+        <!-- Slide 4 -->
+        <div class="carousel-item" data-bs-interval="5000">
+            <img src="<?= SITE_URL ?>/img/banner/banner4.jpg" 
+                 class="d-block w-100 h-100"
+                 style="object-fit: cover;"
+                 alt="Flexible Learning">
+            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded">
+                <h3>Flexible Learning</h3>
+                <p>Online or in-person training options</p>
+            </div>
+        </div>
+        
+        <!-- Slide 5 -->
+        <div class="carousel-item" data-bs-interval="5000">
+            <img src="<?= SITE_URL ?>/img/banner/banner5.jpg" 
+                 class="d-block w-100 h-100"
+                 style="object-fit: cover;"
+                 alt="Proven Results">
+            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded">
+                <h3>Proven Results</h3>
+                <p>Measurable improvements for your team</p>
+            </div>
+        </div>
     </div>
 
-    <!-- Navigation Controls -->
-    <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-        <span class="visually-hidden">Précédent</span>
+    <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
-        <span class="visually-hidden">Suivant</span>
+    <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
     </button>
+</div>
+
+<!-- Debug Information -->
+<div class="container mb-4">
+    <div class="alert alert-info">
+        <h4>Carousel Debug Information</h4>
+        <p>Base URL: <?= SITE_URL ?></p>
+        <p>Image Path Test: <?= SITE_URL ?>/img/banner/banner1.jpg</p>
+        <?php
+        $testImage = $_SERVER['DOCUMENT_ROOT'] . '/img/banner/banner1.jpg';
+        if (file_exists($testImage)) {
+            echo '<p class="text-success">✅ Image found at: ' . $testImage . '</p>';
+            echo '<img src="' . SITE_URL . '/img/banner/banner1.jpg" style="max-width: 200px;" class="img-thumbnail">';
+        } else {
+            echo '<p class="text-danger">❌ Image NOT found at: ' . $testImage . '</p>';
+        }
+        ?>
+    </div>
 </div>
 
 <!-- Featured Courses -->
 <section class="py-5 bg-light">
     <div class="container">
-        <h2 class="text-center mb-5">Cours en vedette</h2>
+        <h2 class="text-center mb-5">Featured Courses</h2>
         <?php if (!empty($featuredCourses)) : ?>
             <div class="row g-4">
                 <?php foreach ($featuredCourses as $course): ?>
@@ -75,9 +134,9 @@ try {
                         <div class="card-body">
                             <h5 class="card-title"><?= htmlspecialchars($course['title']) ?></h5>
                             <p class="card-text"><?= htmlspecialchars($course['short_description']) ?></p>
-                            <a href="<?= SITE_URL ?>/courses/course<?= $course['id'] ?>.php" 
+                            <a href="<?= SITE_URL ?>/courses/view.php?id=<?= $course['id'] ?>" 
                                class="btn btn-primary">
-                               En savoir plus
+                               View Details
                             </a>
                         </div>
                     </div>
@@ -85,15 +144,15 @@ try {
                 <?php endforeach; ?>
             </div>
         <?php else: ?>
-            <div class="alert alert-warning">Aucun cours vedette trouvé.</div>
+            <div class="alert alert-warning">No featured courses found.</div>
         <?php endif; ?>
     </div>
 </section>
 
-<!-- Testimonials -->
+<!-- Testimonials Section -->
 <section class="py-5">
     <div class="container">
-        <h2 class="text-center mb-5">Ce que disent nos clients</h2>
+        <h2 class="text-center mb-5">What Our Clients Say</h2>
         <?php if (!empty($testimonials)) : ?>
             <div class="row">
                 <?php foreach ($testimonials as $testimonial): ?>
@@ -125,7 +184,7 @@ try {
                 <?php endforeach; ?>
             </div>
         <?php else: ?>
-            <div class="alert alert-info">Aucun témoignage disponible.</div>
+            <div class="alert alert-info">No testimonials available.</div>
         <?php endif; ?>
     </div>
 </section>
