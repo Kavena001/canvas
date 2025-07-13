@@ -1,0 +1,17 @@
+# Allow access to PHP files
+<FilesMatch "\.(php)$">
+    Require all granted
+</FilesMatch>
+
+# Prevent directory listing
+Options -Indexes
+
+# Redirect all requests to login if not authenticated
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} !login\.php
+    RewriteCond %{REQUEST_URI} !logout\.php
+    RewriteRule ^(.*)$ login.php [L]
+</IfModule>
