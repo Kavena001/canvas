@@ -69,33 +69,45 @@ $featuredCourses = $db->getRows("SELECT id, title FROM courses WHERE featured = 
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="<?php echo SITE_URL; ?>/index.php">
-                <img src="<?php echo SITE_URL; ?>/img/logo.png" alt="Logo" height="40">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''); ?>" href="<?php echo SITE_URL; ?>/index.php">Accueil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'courses.php' ? 'active' : ''); ?>" href="<?php echo SITE_URL; ?>/courses.php">Cours</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'about.php' ? 'active' : ''); ?>" href="<?php echo SITE_URL; ?>/about.php">À propos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'contact.php' ? 'active' : ''); ?>" href="<?php echo SITE_URL; ?>/contact.php">Contact</a>
-                    </li>
-                </ul>
-            </div>
+     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="<?php echo SITE_URL; ?>/index.php">
+            <img src="<?php echo SITE_URL; ?>/img/logo.png" alt="Logo" height="40">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link <?= (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : '') ?>" 
+                       href="<?php echo SITE_URL; ?>/index.php">
+                       Accueil
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= (basename($_SERVER['PHP_SELF']) == 'courses.php' ? 'active' : '') ?>" 
+                       href="<?php echo SITE_URL; ?>/courses.php">
+                       Cours
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= (basename($_SERVER['PHP_SELF']) == 'about.php' ? 'active' : '') ?>" 
+                       href="<?php echo SITE_URL; ?>/about.php">
+                       À propos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= (basename($_SERVER['PHP_SELF']) == 'contact.php' ? 'active' : '') ?>" 
+                       href="<?php echo SITE_URL; ?>/contact.php">
+                       Contact
+                    </a>
+                </li>
+            </ul>
+            <!-- Removed the language switcher section -->
         </div>
-    </nav>
-
+    </div>
+</nav>
     <!-- Debug path information (remove in production) -->
     <div class="debug-path">
         SITE_URL: <?php echo SITE_URL; ?><br>
