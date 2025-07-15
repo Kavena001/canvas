@@ -8,6 +8,7 @@
     --dark-color: #333333;
     --light-color: #f8f9fa;
     --navbar-footer-color: #65697d;
+    --text-on-dark: white;
 }
 
 body {
@@ -32,24 +33,10 @@ body {
     color: white;
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
 }
-/* Custom Carousel Height */
+
+/* Carousel Styles */
 .carousel.reduced-height .carousel-inner {
     height: 266px !important;
-}
-
-@media (max-width: 768px) {
-    .carousel.reduced-height .carousel-inner {
-        height: 180px !important;
-    }
-    
-    .carousel-caption {
-        padding: 10px !important;
-    }
-    
-    .carousel-caption h2 {
-        font-size: 1.1rem !important;
-        margin-bottom: 0.2rem !important;
-    }
 }
 
 .carousel-item img {
@@ -68,11 +55,27 @@ body {
     width: 90%;
     max-width: 800px;
 }
-/* End of Carousel */
+
+/* Dark Section Styles */
+.dark-section {
+    background-color: var(--navbar-footer-color);
+    color: var(--text-on-dark);
+}
+
+.dark-section .btn-outline-light {
+    border-color: var(--text-on-dark);
+    color: var(--text-on-dark);
+}
+
+.dark-section .btn-outline-light:hover {
+    background-color: var(--text-on-dark);
+    color: var(--navbar-footer-color);
+}
+
 /* Footer Styles */
 footer {
     background-color: var(--navbar-footer-color);
-    color: white;
+    color: var(--text-on-dark);
     padding: 2rem 0;
 }
 
@@ -122,15 +125,22 @@ footer a:hover {
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
-    .carousel-inner {
-        height: 300px;
+    .carousel-inner,
+    .carousel.reduced-height .carousel-inner {
+        height: 180px !important;
     }
     
     .carousel-caption {
         bottom: 20%;
+        padding: 10px !important;
     }
     
     .carousel-caption h2 {
-        font-size: 1.5rem;
+        font-size: 1.1rem !important;
+        margin-bottom: 0.2rem !important;
+    }
+
+    footer {
+        padding: 1.5rem 0;
     }
 }
