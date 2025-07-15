@@ -98,172 +98,88 @@ $banners = [
                     <td><?= $exists ? '✅ Yes' : '❌ No' ?></td>
                     <td>
                         <?php if ($exists): ?>
-                        <img src="<?= $imgUrl ?>" style="max 60-width: 60px;"px;" class="img-th class="img-thumbnail">
-                       umbnail">
+                        <img src="<?= $imgUrl ?>" style="max-width: 60px;" class="img-thumbnail">
                         <?php endif; ?>
-                    <?php endif; ?>
                     </td>
-                </tr </td>
                 </tr>
-                <?php endforeach>
                 <?php endforeach; ?>
-            </; ?>
             </tbody>
-        </tbody>
         </table>
-        <p classtable>
-        <p class="mb-0="mb-0"><strong>Document Root:</"><strong>Document Root:</strong> <?=strong> <?= $_SERVER['DOCUMENT_ROOT $_SERVER['DOCUMENT_ROOT'] ?></p'] ?></p>
-        <p class>
-        <p class="mb="mb-0"><strong-0"><strong>S>SITE_URL:</strongITE_URL:</strong> <?> <?= S= SITE_URL ?></pITE_URL ?></p>
->
-    </div    </div>
-</>
+        <p class="mb-0"><strong>Document Root:</strong> <?= $_SERVER['DOCUMENT_ROOT'] ?></p>
+        <p class="mb-0"><strong>SITE_URL:</strong> <?= SITE_URL ?></p>
+    </div>
 </div>
 
-<!-- Featureddiv>
-
 <!-- Featured Courses Section -->
-<section Courses Section -->
-<section class=" class="py-py-5 bg5 bg-light">
-    <-light">
-    <div classdiv class="container="container">
-       ">
-        <h2 class <h2 class="text="text-center mb-5-center mb-5">Featured Courses</">Featured Courses</hh2>
-        <?php if (!empty($featuredCourses))2>
-        <?php if (!empty($featuredCourses)) : : ?>
-            <div class ?>
-            <div class="row g-="row g-44">
-                <?">
-                <?php foreachphp foreach ($featuredCourses ($featuredCourses as $course): ?>
-                as $course): ?>
-                <div class=" <div class="col-md-4col-md-4">
-                   ">
-                    <div class=" <div class="card h-100card h-100">
-                       ">
-                        <?php if (! <?php if (!empty($course['empty($course['image']))image'])): ?>
-                            <: ?>
-                            <img src="<?=img src="<?= SITE SITE_URL ?>/uploads_URL ?>/uploads/courses/courses/<?= htmlspecialchars($course/<?= htmlspecialchars($course['image']) ?['image']) ?>" 
-                                 class="card>" 
-                                 class="card-img-top"-img-top" 
-                                 alt="<?= 
-                                 alt="<?= htmlspecial htmlspecialchars($course['chars($course['title']) ?>title']) ?>">
-                       ">
-                        <?php endif; <?php endif; ?>
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Featured Courses</h2>
+        <?php if (!empty($featuredCourses)) : ?>
+            <div class="row g-4">
+                <?php foreach ($featuredCourses as $course): ?>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <?php if (!empty($course['image'])): ?>
+                            <img src="<?= SITE_URL ?>/uploads/courses/<?= htmlspecialchars($course['image']) ?>" 
+                                 class="card-img-top" 
+                                 alt="<?= htmlspecialchars($course['title']) ?>">
+                        <?php endif; ?>
                         <div class="card-body">
-                            < ?>
-                        <div class="card-body">
-                            <h5 class="h5 class="card-titlecard-title"><?= html"><?= htmlspecialchars($course['titlespecialchars($course['title']) ?></h5']) ?></h5>
-                            <p>
-                            <p class=" class="card-text"><?card-text"><?= htmlspecialchars= htmlspecialchars($course($course['short_description'])['short_description']) ?></p>
-                            ?></p>
-                            <a <a href="<? href="<?= S= SITE_URL ?>/ITE_URL ?>/courses/viewcourses/view.php?id=<?.php?id=<?= $course['= $course['id'] ?>"id'] ?>" 
-                               
-                               class="btn btn class="btn btn-primary">
-                               View Details-primary">
+                            <h5 class="card-title"><?= htmlspecialchars($course['title']) ?></h5>
+                            <p class="card-text"><?= htmlspecialchars($course['short_description']) ?></p>
+                            <a href="<?= SITE_URL ?>/courses/view.php?id=<?= $course['id'] ?>" 
+                               class="btn btn-primary">
                                View Details
-                            </a
                             </a>
                         </div>
-                        </div>
-                    </>
                     </div>
                 </div>
-                </divdiv>
-               >
                 <?php endforeach; ?>
-            </div <?php endforeach; ?>
             </div>
-        <?php>
         <?php else: ?>
-            else: ?>
-            <div class="alert alert <div class="alert alert-warning">No-warning">No featured courses found.</div featured courses found.</div>
-        <?php endif>
+            <div class="alert alert-warning">No featured courses found.</div>
         <?php endif; ?>
-    </; ?>
     </div>
 </section>
 
-<!--div>
-</section>
-
-<!-- Testimonials Section Testimonials Section -->
-<section class="py- -->
+<!-- Testimonials Section -->
 <section class="py-5">
-    <5">
     <div class="container">
-       div class="container">
-        <h2 class <h2 class="text-center mb-5="text-center mb-5">What Our Clients">What Our Clients Say</h2 Say</h2>
-       >
-        <?php if (! <?php if (!empty($testimonials))empty($testimonials)) : : ?>
-            <div class ?>
+        <h2 class="text-center mb-5">What Our Clients Say</h2>
+        <?php if (!empty($testimonials)) : ?>
             <div class="row">
-                <?php foreach ($="row">
-                <?php foreach ($testimonials astestimonials as $testimonial): $testimonial): ?>
-                <div class ?>
-                <div class="col-md-4 mb="col-md-4 mb-4">
-                   -4">
-                    <div class="card h <div class="card h-100">
-                       -100">
-                        <div class="card-body <div class="card-body">
-                           ">
-                            <div <div class="mb-3 text class="mb-3 text-warning">
-                               -warning">
-                                <?= str_re <?= str_repeat('<peat('<i class="bii class="bi bi-star bi-star-fill"></i>',-fill"></i>', $test $testimonial['rating'])imonial['rating']) ?>
-                                <?= ($ ?>
-                                <?= ($testimonial['rating']testimonial['rating < 5)'] < 5) ? str_repeat ? str_repeat('<i class="bi bi('<i class="bi bi-star"></i>-star"></i>', 5 - $test', 5 - $testimonial['ratingimonial['rating']) : ''']) : '' ?>
+                <?php foreach ($testimonials as $testimonial): ?>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="mb-3 text-warning">
+                                <?= str_repeat('<i class="bi bi-star-fill"></i>', $testimonial['rating']) ?>
+                                <?= ($testimonial['rating'] < 5) ? str_repeat('<i class="bi bi-star"></i>', 5 - $testimonial['rating']) : '' ?>
                             </div>
-                            < ?>
-                            </div>
-                            <p class="cardp class="card-text">-text">"<?"<?= html= htmlspecialchars($testimonialspecialchars($testimonial['content']) ?['content']) ?>"</p>
-                            <>"</p>
-                            <div class="ddiv class="-flex align-items-centerd-flex align-items-center mt-auto mt-auto">
-                                <?php">
-                                <?php if (!empty($testim if (!empty($testimonial['image']))onial['image'])): ?>
-                                    <img src: ?>
-                                    <img src="<?= SITE="<?= SITE_URL ?>/uploads/testimon_URL ?>/uploads/testimonials/<?=ials/<?= html htmlspecialchars($specialchars($testimtestimonial['image']) ?>"onial['image']) ? 
-                                         alt="<?>" 
-                                         alt="<?== html htmlspecialspecialchars($testimonial['name']) ?>" 
-                                         class="roundedchars($testimonial['name']) ?>" 
-                                         class="rounded-circle me-circle me--3" width="50">
-                               3" width="50">
+                            <p class="card-text">"<?= htmlspecialchars($testimonial['content']) ?>"</p>
+                            <div class="d-flex align-items-center mt-auto">
+                                <?php if (!empty($testimonial['image'])): ?>
+                                    <img src="<?= SITE_URL ?>/uploads/testimonials/<?= htmlspecialchars($testimonial['image']) ?>" 
+                                         alt="<?= htmlspecialchars($testimonial['name']) ?>" 
+                                         class="rounded-circle me-3" width="50">
                                 <?php endif; ?>
-                                <?php endif; ?>
- <div>
-                                                                   <div>
-                                    <h6 class <h6 class="mb-0="mb-0"><?"><?= htmlspecialchars= htmlspecialchars($testimonial['name($testimonial['name']) ?></h6']) ?></h6>
-                                    <small>
-                                    <small class=" class="text-mutedtext-muted">
-                                        <?= htmlspecialchars">
-                                        <?= htmlspecialchars($testimonial($testimonial['position']) ?>,['position']) ?>, 
-                                        <? 
-                                        <?= htmlspecialchars($test= htmlspecialchars($testimimonial['company'])onial['company']) ?>
-                                    </small>
-                                ?>
+                                <div>
+                                    <h6 class="mb-0"><?= htmlspecialchars($testimonial['name']) ?></h6>
+                                    <small class="text-muted">
+                                        <?= htmlspecialchars($testimonial['position']) ?>, 
+                                        <?= htmlspecialchars($testimonial['company']) ?>
                                     </small>
                                 </div>
                             </div>
-                            </div>
                         </div>
-                        </ </div>
-                    </divdiv>
                     </div>
                 </div>
-                </div>
-               >
-                <?php endforeach; <?php endforeach; ?>
-            </div ?>
+                <?php endforeach; ?>
             </div>
-        <?>
-        <?php else:php else: ?>
-            <div class ?>
-            <div class="alert="alert alert-info">No alert-info">No testimonials available.</div testimonials available.</div>
-        <?php endif>
+        <?php else: ?>
+            <div class="alert alert-info">No testimonials available.</div>
         <?php endif; ?>
-    </; ?>
-    </divdiv>
+    </div>
 </section>
 
-<?>
-</section>
-
-<?php require_once 'php require_once 'includes/fincludes/footer.php';ooter.php'; ?>
+<?php require_once 'includes/footer.php'; ?>
