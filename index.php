@@ -16,97 +16,77 @@ try {
     die("<div class='alert alert-danger'>Database Error: " . $e->getMessage() . "</div>");
 }
 
-// Define banner data
+// Define the 3 banner data
 $banners = [
     ['banner1.jpg', 'Professional Training', 'Enhance your team skills'],
     ['banner2.jpg', 'Certified Courses', 'Industry-recognized certifications'],
-    ['banner3.jpg', 'Expert Instructors', 'Learn from the best'],
-    ['banner4.jpg', 'Flexible Learning', 'Online or in-person'],
-    ['banner5.jpg', 'Proven Results', 'Measurable improvements']
+    ['banner3.jpg', 'Expert Instructors', 'Learn from the best']
 ];
 ?>
 
-<!-- Main Carousel Section -->
+<!-- Main Carousel - Simplified for 3 Banners -->
 <div id="mainCarousel" class="carousel slide carousel-fade mb-4" data-bs-ride="carousel">
     <div class="carousel-indicators">
-        <?php for ($i = 0; $i < 5; $i++): ?>
-        <button type="button" data-bs-target="#mainCarousel" 
-                data-bs-slide-to="<?= $i ?>" 
-                class="<?= $i === 0 ? 'active' : '' ?>"></button>
-        <?php endfor; ?>
+        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2"></button>
     </div>
 
-    <div class="carousel-inner" style="height: 400px; background-color: #f0f0f0;">
-        <?php foreach ($banners as $index => $banner):
+    <div class="carousel-inner" style="height: 400px;">
+        <?php foreach ($banners as $index => $banner): 
             $imageUrl = SITE_URL . '/img/banner/' . $banner[0];
             $physicalPath = $_SERVER['DOCUMENT_ROOT'] . '/img/banner/' . $banner[0];
         ?>
         <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>" data-bs-interval="5000">
-            <?php if (file_exists($physicalPath)): ?>
-                <img src="<?= $imageUrl ?>" 
-                     class="d-block w-100 h-100"
-                     style="object-fit: cover;"
-                     alt="<?= $banner[1] ?>">
-                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded">
-                    <h3><?= $banner[1] ?></h3>
-                    <p><?= $banner[2] ?></p>
-                </div>
-            <?php else: ?>
-                <div class="d-block w-100 h-100 d-flex align-items-center justify-content-center">
-                    <div class="text-center">
-                        <i class="bi bi-image-fill" style="font-size: 3rem;"></i>
-                        <p>Missing: <?= $banner[0] ?></p>
-                    </div>
-                </div>
-            <?php endif; ?>
+            <img src="<?= $imageUrl ?>" 
+                 class="d-block w-100 h-100"
+                 style="object-fit: cover;"
+                 alt="<?= $banner[1] ?>"
+                 onerror="this.onerror=null; this.src='https://via.placeholder.com/1920x600/6c757d/ffffff?text=Banner+<?= $index+1 ?>'">
+            
+            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded">
+                <h3><?= $banner[1] ?></h3>
+                <p><?= $banner[2] ?></p>
+            </div>
         </div>
         <?php endforeach; ?>
     </div>
 
     <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="carousel-control-prev-icon"></span>
         <span class="visually-hidden">Previous</span>
     </button>
     <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="carousel-control-next-icon"></span>
         <span class="visually-hidden">Next</span>
     </button>
 </div>
 
-<!-- Debug Information Section -->
-<div class="container mt-4">
-    <div class="alert alert-secondary">
-        <h4>Carousel Debug Details</h4>
-        <table class="table table-sm">
-            <thead>
-                <tr>
-                    <th>Banner</th>
-                    <th>URL</th>
-                    <th>Exists</th>
-                    <th>Preview</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($banners as $banner): 
-                    $imgUrl = SITE_URL . '/img/banner/' . $banner[0];
-                    $imgPath = $_SERVER['DOCUMENT_ROOT'] . '/img/banner/' . $banner[0];
-                    $exists = file_exists($imgPath);
-                ?>
-                <tr>
-                    <td><?= $banner[0] ?></td>
-                    <td><small><?= $imgUrl ?></small></td>
-                    <td><?= $exists ? '✅ Yes' : '❌ No' ?></td>
-                    <td>
+<!-- Debug Information -->
+<div class="container mt-3 mb-4">
+    <div class="alert alert-info">
+        <h5>Carousel Verification</h5>
+        <p>Showing 3 banners located at: <code><?= SITE_URL ?>/img/banner/</code></p>
+        <div class="row">
+            <?php foreach ($banners as $index => $banner): 
+                $imgPath = $_SERVER['DOCUMENT_ROOT'] . '/img/banner/' . $banner[0];
+                $exists = file_exists($imgPath);
+            ?>
+            <div class="col-md-4 text-center">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h6><?= $banner[0] ?></h6>
+                        <p class="mb-2"><?= $exists ? '✅ Found' : '❌ Missing' ?></p>
                         <?php if ($exists): ?>
-                        <img src="<?= $imgUrl ?>" style="max-width: 60px;" class="img-thumbnail">
+                        <img src="<?= SITE_URL ?>/img/banner/<?= $banner[0] ?>" 
+                             style="max-height: 80px; width: auto;" 
+                             class="img-fluid rounded">
                         <?php endif; ?>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-        <p class="mb-0"><strong>Document Root:</strong> <?= $_SERVER['DOCUMENT_ROOT'] ?></p>
-        <p class="mb-0"><strong>SITE_URL:</strong> <?= SITE_URL ?></p>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
     </div>
 </div>
 
