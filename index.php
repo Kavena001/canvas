@@ -15,78 +15,52 @@ try {
 } catch (Exception $e) {
     die("<div class='alert alert-danger'>Database Error: " . $e->getMessage() . "</div>");
 }
+
+// Define banner data
+$banners = [
+    ['banner1.jpg', 'Professional Training', 'Enhance your team skills'],
+    ['banner2.jpg', 'Certified Courses', 'Industry-recognized certifications'],
+    ['banner3.jpg', 'Expert Instructors', 'Learn from the best'],
+    ['banner4.jpg', 'Flexible Learning', 'Online or in-person'],
+    ['banner5.jpg', 'Proven Results', 'Measurable improvements']
+];
 ?>
 
-<!-- Main Carousel -->
+<!-- Main Carousel Section -->
 <div id="mainCarousel" class="carousel slide carousel-fade mb-4" data-bs-ride="carousel">
     <div class="carousel-indicators">
-        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active"></button>
-        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1"></button>
-        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2"></button>
-        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="3"></button>
-        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="4"></button>
+        <?php for ($i = 0; $i < 5; $i++): ?>
+        <button type="button" data-bs-target="#mainCarousel" 
+                data-bs-slide-to="<?= $i ?>" 
+                class="<?= $i === 0 ? 'active' : '' ?>"></button>
+        <?php endfor; ?>
     </div>
 
-    <div class="carousel-inner" style="height: 400px;">
-        <!-- Slide 1 -->
-        <div class="carousel-item active" data-bs-interval="5000">
-            <img src="<?= SITE_URL ?>/img/banner/banner1.jpg" 
-                 class="d-block w-100 h-100"
-                 style="object-fit: cover;"
-                 alt="Professional Training">
-            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded">
-                <h3>Professional Training</h3>
-                <p>Enhance your team skills with our courses</p>
-            </div>
+    <div class="carousel-inner" style="height: 400px; background-color: #f0f0f0;">
+        <?php foreach ($banners as $index => $banner):
+            $imageUrl = SITE_URL . '/img/banner/' . $banner[0];
+            $physicalPath = $_SERVER['DOCUMENT_ROOT'] . '/img/banner/' . $banner[0];
+        ?>
+        <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>" data-bs-interval="5000">
+            <?php if (file_exists($physicalPath)): ?>
+                <img src="<?= $imageUrl ?>" 
+                     class="d-block w-100 h-100"
+                     style="object-fit: cover;"
+                     alt="<?= $banner[1] ?>">
+                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded">
+                    <h3><?= $banner[1] ?></h3>
+                    <p><?= $banner[2] ?></p>
+                </div>
+            <?php else: ?>
+                <div class="d-block w-100 h-100 d-flex align-items-center justify-content-center">
+                    <div class="text-center">
+                        <i class="bi bi-image-fill" style="font-size: 3rem;"></i>
+                        <p>Missing: <?= $banner[0] ?></p>
+                    </div>
+                </div>
+            <?php endif; ?>
         </div>
-        
-        <!-- Slide 2 -->
-        <div class="carousel-item" data-bs-interval="5000">
-            <img src="<?= SITE_URL ?>/img/banner/banner2.jpg" 
-                 class="d-block w-100 h-100"
-                 style="object-fit: cover;"
-                 alt="Certified Courses">
-            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded">
-                <h3>Certified Courses</h3>
-                <p>Get industry-recognized certifications</p>
-            </div>
-        </div>
-        
-        <!-- Slide 3 -->
-        <div class="carousel-item" data-bs-interval="5000">
-            <img src="<?= SITE_URL ?>/img/banner/banner3.jpg" 
-                 class="d-block w-100 h-100"
-                 style="object-fit: cover;"
-                 alt="Expert Instructors">
-            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded">
-                <h3>Expert Instructors</h3>
-                <p>Learn from industry professionals</p>
-            </div>
-        </div>
-        
-        <!-- Slide 4 -->
-        <div class="carousel-item" data-bs-interval="5000">
-            <img src="<?= SITE_URL ?>/img/banner/banner4.jpg" 
-                 class="d-block w-100 h-100"
-                 style="object-fit: cover;"
-                 alt="Flexible Learning">
-            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded">
-                <h3>Flexible Learning</h3>
-                <p>Online or in-person training options</p>
-            </div>
-        </div>
-        
-        <!-- Slide 5 -->
-        <div class="carousel-item" data-bs-interval="5000">
-            <img src="<?= SITE_URL ?>/img/banner/banner5.jpg" 
-                 class="d-block w-100 h-100"
-                 style="object-fit: cover;"
-                 alt="Proven Results">
-            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded">
-                <h3>Proven Results</h3>
-                <p>Measurable improvements for your team</p>
-            </div>
-        </div>
+        <?php endforeach; ?>
     </div>
 
     <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
@@ -99,94 +73,197 @@ try {
     </button>
 </div>
 
-<!-- Debug Information -->
-<div class="container mb-4">
-    <div class="alert alert-info">
-        <h4>Carousel Debug Information</h4>
-        <p>Base URL: <?= SITE_URL ?></p>
-        <p>Image Path Test: <?= SITE_URL ?>/img/banner/banner1.jpg</p>
-        <?php
-        $testImage = $_SERVER['DOCUMENT_ROOT'] . '/img/banner/banner1.jpg';
-        if (file_exists($testImage)) {
-            echo '<p class="text-success">✅ Image found at: ' . $testImage . '</p>';
-            echo '<img src="' . SITE_URL . '/img/banner/banner1.jpg" style="max-width: 200px;" class="img-thumbnail">';
-        } else {
-            echo '<p class="text-danger">❌ Image NOT found at: ' . $testImage . '</p>';
-        }
-        ?>
-    </div>
+<!-- Debug Information Section -->
+<div class="container mt-4">
+    <div class="alert alert-secondary">
+        <h4>Carousel Debug Details</h4>
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Banner</th>
+                    <th>URL</th>
+                    <th>Exists</th>
+                    <th>Preview</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($banners as $banner): 
+                    $imgUrl = SITE_URL . '/img/banner/' . $banner[0];
+                    $imgPath = $_SERVER['DOCUMENT_ROOT'] . '/img/banner/' . $banner[0];
+                    $exists = file_exists($imgPath);
+                ?>
+                <tr>
+                    <td><?= $banner[0] ?></td>
+                    <td><small><?= $imgUrl ?></small></td>
+                    <td><?= $exists ? '✅ Yes' : '❌ No' ?></td>
+                    <td>
+                        <?php if ($exists): ?>
+                        <img src="<?= $imgUrl ?>" style="max 60-width: 60px;"px;" class="img-th class="img-thumbnail">
+                       umbnail">
+                        <?php endif; ?>
+                    <?php endif; ?>
+                    </td>
+                </tr </td>
+                </tr>
+                <?php endforeach>
+                <?php endforeach; ?>
+            </; ?>
+            </tbody>
+        </tbody>
+        </table>
+        <p classtable>
+        <p class="mb-0="mb-0"><strong>Document Root:</"><strong>Document Root:</strong> <?=strong> <?= $_SERVER['DOCUMENT_ROOT $_SERVER['DOCUMENT_ROOT'] ?></p'] ?></p>
+        <p class>
+        <p class="mb="mb-0"><strong-0"><strong>S>SITE_URL:</strongITE_URL:</strong> <?> <?= S= SITE_URL ?></pITE_URL ?></p>
+>
+    </div    </div>
+</>
 </div>
 
-<!-- Featured Courses -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <h2 class="text-center mb-5">Featured Courses</h2>
-        <?php if (!empty($featuredCourses)) : ?>
-            <div class="row g-4">
-                <?php foreach ($featuredCourses as $course): ?>
-                <div class="col-md-4">
-                    <div class="card h-100">
-                        <?php if (!empty($course['image'])): ?>
-                            <img src="<?= SITE_URL ?>/uploads/courses/<?= htmlspecialchars($course['image']) ?>" 
-                                 class="card-img-top" 
-                                 alt="<?= htmlspecialchars($course['title']) ?>">
-                        <?php endif; ?>
+<!-- Featureddiv>
+
+<!-- Featured Courses Section -->
+<section Courses Section -->
+<section class=" class="py-py-5 bg5 bg-light">
+    <-light">
+    <div classdiv class="container="container">
+       ">
+        <h2 class <h2 class="text="text-center mb-5-center mb-5">Featured Courses</">Featured Courses</hh2>
+        <?php if (!empty($featuredCourses))2>
+        <?php if (!empty($featuredCourses)) : : ?>
+            <div class ?>
+            <div class="row g-="row g-44">
+                <?">
+                <?php foreachphp foreach ($featuredCourses ($featuredCourses as $course): ?>
+                as $course): ?>
+                <div class=" <div class="col-md-4col-md-4">
+                   ">
+                    <div class=" <div class="card h-100card h-100">
+                       ">
+                        <?php if (! <?php if (!empty($course['empty($course['image']))image'])): ?>
+                            <: ?>
+                            <img src="<?=img src="<?= SITE SITE_URL ?>/uploads_URL ?>/uploads/courses/courses/<?= htmlspecialchars($course/<?= htmlspecialchars($course['image']) ?['image']) ?>" 
+                                 class="card>" 
+                                 class="card-img-top"-img-top" 
+                                 alt="<?= 
+                                 alt="<?= htmlspecial htmlspecialchars($course['chars($course['title']) ?>title']) ?>">
+                       ">
+                        <?php endif; <?php endif; ?>
                         <div class="card-body">
-                            <h5 class="card-title"><?= htmlspecialchars($course['title']) ?></h5>
-                            <p class="card-text"><?= htmlspecialchars($course['short_description']) ?></p>
-                            <a href="<?= SITE_URL ?>/courses/view.php?id=<?= $course['id'] ?>" 
-                               class="btn btn-primary">
+                            < ?>
+                        <div class="card-body">
+                            <h5 class="h5 class="card-titlecard-title"><?= html"><?= htmlspecialchars($course['titlespecialchars($course['title']) ?></h5']) ?></h5>
+                            <p>
+                            <p class=" class="card-text"><?card-text"><?= htmlspecialchars= htmlspecialchars($course($course['short_description'])['short_description']) ?></p>
+                            ?></p>
+                            <a <a href="<? href="<?= S= SITE_URL ?>/ITE_URL ?>/courses/viewcourses/view.php?id=<?.php?id=<?= $course['= $course['id'] ?>"id'] ?>" 
+                               
+                               class="btn btn class="btn btn-primary">
+                               View Details-primary">
                                View Details
+                            </a
                             </a>
                         </div>
+                        </div>
+                    </>
                     </div>
                 </div>
+                </divdiv>
+               >
                 <?php endforeach; ?>
+            </div <?php endforeach; ?>
             </div>
+        <?php>
         <?php else: ?>
-            <div class="alert alert-warning">No featured courses found.</div>
+            else: ?>
+            <div class="alert alert <div class="alert alert-warning">No-warning">No featured courses found.</div featured courses found.</div>
+        <?php endif>
         <?php endif; ?>
+    </; ?>
     </div>
 </section>
 
-<!-- Testimonials Section -->
+<!--div>
+</section>
+
+<!-- Testimonials Section Testimonials Section -->
+<section class="py- -->
 <section class="py-5">
+    <5">
     <div class="container">
-        <h2 class="text-center mb-5">What Our Clients Say</h2>
-        <?php if (!empty($testimonials)) : ?>
+       div class="container">
+        <h2 class <h2 class="text-center mb-5="text-center mb-5">What Our Clients">What Our Clients Say</h2 Say</h2>
+       >
+        <?php if (! <?php if (!empty($testimonials))empty($testimonials)) : : ?>
+            <div class ?>
             <div class="row">
-                <?php foreach ($testimonials as $testimonial): ?>
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <div class="mb-3 text-warning">
-                                <?= str_repeat('<i class="bi bi-star-fill"></i>', $testimonial['rating']) ?>
-                                <?= ($testimonial['rating'] < 5) ? str_repeat('<i class="bi bi-star"></i>', 5 - $testimonial['rating']) : '' ?>
+                <?php foreach ($="row">
+                <?php foreach ($testimonials astestimonials as $testimonial): $testimonial): ?>
+                <div class ?>
+                <div class="col-md-4 mb="col-md-4 mb-4">
+                   -4">
+                    <div class="card h <div class="card h-100">
+                       -100">
+                        <div class="card-body <div class="card-body">
+                           ">
+                            <div <div class="mb-3 text class="mb-3 text-warning">
+                               -warning">
+                                <?= str_re <?= str_repeat('<peat('<i class="bii class="bi bi-star bi-star-fill"></i>',-fill"></i>', $test $testimonial['rating'])imonial['rating']) ?>
+                                <?= ($ ?>
+                                <?= ($testimonial['rating']testimonial['rating < 5)'] < 5) ? str_repeat ? str_repeat('<i class="bi bi('<i class="bi bi-star"></i>-star"></i>', 5 - $test', 5 - $testimonial['ratingimonial['rating']) : ''']) : '' ?>
                             </div>
-                            <p class="card-text">"<?= htmlspecialchars($testimonial['content']) ?>"</p>
-                            <div class="d-flex align-items-center mt-auto">
-                                <?php if (!empty($testimonial['image'])): ?>
-                                    <img src="<?= SITE_URL ?>/uploads/testimonials/<?= htmlspecialchars($testimonial['image']) ?>" 
-                                         alt="<?= htmlspecialchars($testimonial['name']) ?>" 
-                                         class="rounded-circle me-3" width="50">
+                            < ?>
+                            </div>
+                            <p class="cardp class="card-text">-text">"<?"<?= html= htmlspecialchars($testimonialspecialchars($testimonial['content']) ?['content']) ?>"</p>
+                            <>"</p>
+                            <div class="ddiv class="-flex align-items-centerd-flex align-items-center mt-auto mt-auto">
+                                <?php">
+                                <?php if (!empty($testim if (!empty($testimonial['image']))onial['image'])): ?>
+                                    <img src: ?>
+                                    <img src="<?= SITE="<?= SITE_URL ?>/uploads/testimon_URL ?>/uploads/testimonials/<?=ials/<?= html htmlspecialchars($specialchars($testimtestimonial['image']) ?>"onial['image']) ? 
+                                         alt="<?>" 
+                                         alt="<?== html htmlspecialspecialchars($testimonial['name']) ?>" 
+                                         class="roundedchars($testimonial['name']) ?>" 
+                                         class="rounded-circle me-circle me--3" width="50">
+                               3" width="50">
                                 <?php endif; ?>
-                                <div>
-                                    <h6 class="mb-0"><?= htmlspecialchars($testimonial['name']) ?></h6>
-                                    <small class="text-muted">
-                                        <?= htmlspecialchars($testimonial['position']) ?>, 
-                                        <?= htmlspecialchars($testimonial['company']) ?>
+                                <?php endif; ?>
+ <div>
+                                                                   <div>
+                                    <h6 class <h6 class="mb-0="mb-0"><?"><?= htmlspecialchars= htmlspecialchars($testimonial['name($testimonial['name']) ?></h6']) ?></h6>
+                                    <small>
+                                    <small class=" class="text-mutedtext-muted">
+                                        <?= htmlspecialchars">
+                                        <?= htmlspecialchars($testimonial($testimonial['position']) ?>,['position']) ?>, 
+                                        <? 
+                                        <?= htmlspecialchars($test= htmlspecialchars($testimimonial['company'])onial['company']) ?>
+                                    </small>
+                                ?>
                                     </small>
                                 </div>
                             </div>
+                            </div>
                         </div>
+                        </ </div>
+                    </divdiv>
                     </div>
                 </div>
-                <?php endforeach; ?>
+                </div>
+               >
+                <?php endforeach; <?php endforeach; ?>
+            </div ?>
             </div>
-        <?php else: ?>
-            <div class="alert alert-info">No testimonials available.</div>
+        <?>
+        <?php else:php else: ?>
+            <div class ?>
+            <div class="alert="alert alert-info">No alert-info">No testimonials available.</div testimonials available.</div>
+        <?php endif>
         <?php endif; ?>
-    </div>
+    </; ?>
+    </divdiv>
 </section>
 
-<?php require_once 'includes/footer.php'; ?>
+<?>
+</section>
+
+<?php require_once 'php require_once 'includes/fincludes/footer.php';ooter.php'; ?>
