@@ -1,115 +1,127 @@
 <?php
-require_once 'includes/config.php';
-require_once 'includes/db.php';
-require_once 'includes/header.php';
+require 'includes/config.php';
+require 'includes/db.php';
+require 'includes/header.php';
 
-try {
-    // Get featured courses
-    $featuredCourses = $db->getRows("SELECT * FROM courses WHERE featured = 1 ORDER BY title LIMIT 3");
-    
-    // Get testimonials
-    $testimonials = $db->getRows("SELECT * FROM testimonials WHERE featured = 1 ORDER BY RAND() LIMIT 3");
-    
-    // Get team members
-    $teamMembers = $db->getRows("SELECT * FROM team_members ORDER BY name LIMIT 4");
-} catch (Exception $e) {
-    die("<div class='alert alert-danger'>Database Error: " . $e->getMessage() . "</div>");
-}
+// Get featured courses from database
+$featured_courses = $db->getRows("SELECT * FROM courses WHERE featured = 1 ORDER BY title LIMIT 3");
 
-// Define the 3 banner data
-$banners = [
-    ['banner1.jpg', 'Professional Training', 'Enhance your team skills'],
-    ['banner2.jpg', 'Certified Courses', 'Industry-recognized certifications'],
-    ['banner3.jpg', 'Expert Instructors', 'Learn from the best']
-];
+// Get testimonials from database
+$testimonials = $db->getRows("SELECT * FROM testimonials WHERE featured = 1 ORDER BY RAND() LIMIT 3");
 ?>
 
-<!-- Main Carousel - Simplified for 3 Banners -->
-<div id="mainCarousel" class="carousel slide carousel-fade mb-4" data-bs-ride="carousel">
-    <div class="carousel-indicators">
-        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active"></button>
-        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1"></button>
-        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2"></button>
-    </div>
-
-    <div class="carousel-inner" style="height: 400px;">
-        <?php foreach ($banners as $index => $banner): 
-            $imageUrl = SITE_URL . '/img/banner/' . $banner[0];
-            $physicalPath = $_SERVER['DOCUMENT_ROOT'] . '/img/banner/' . $banner[0];
-        ?>
-        <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>" data-bs-interval="5000">
-            <img src="<?= $imageUrl ?>" 
-                 class="d-block w-100 h-100"
-                 style="object-fit: cover;"
-                 alt="<?= $banner[1] ?>"
-                 onerror="this.onerror=null; this.src='https://via.placeholder.com/1920x600/6c757d/ffffff?text=Banner+<?= $index+1 ?>'">
-            
-            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded">
-                <h3><?= $banner[1] ?></h3>
-                <p><?= $banner[2] ?></p>
+<!---------------------------------- Banner Carousel -------------------------------------------->
+<div id="bannerCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="img/banner/banner1.jpg" class="d-block w-100" alt="Formation professionnelle">
+            <div class="carousel-caption d-none d-md-block">
+                <h2>Développez les compétences de votre équipe</h2>
+                <p>Formations professionnelles adaptées aux besoins de votre entreprise</p>
             </div>
         </div>
-        <?php endforeach; ?>
+        <div class="carousel-item">
+            <img src="img/banner/banner2.jpg" class="d-block w-100" alt="Développement des compétences">
+            <div class="carousel-caption d-none d-md-block">
+                <h2>Formations certifiantes</h2>
+                <p>Améliorez la productivité et l'efficacité de vos employés</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="img/banner/banner3.jpg" class="d-block w-100" alt="Apprentissage en ligne">
+            <div class="carousel-caption d-none d-md-block">
+                <h2>Apprentissage flexible</h2>
+                <p>Formations en ligne et en présentiel adaptées à vos horaires</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="img/banner/banner4.jpg" class="d-block w-100" alt="Équipe professionnelle">
+            <div class="carousel-caption d-none d-md-block">
+                <h2>Experts du secteur</h2>
+                <p>Formateurs expérimentés avec une expertise pratique</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="img/banner/banner5.jpg" class="d-block w-100" alt="Certification">
+            <div class="carousel-caption d-none d-md-block">
+                <h2>Investissez dans votre capital humain</h2>
+                <p>Des solutions de formation qui génèrent un retour sur investissement tangible</p>
+            </div>
+        </div>
     </div>
-
-    <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-        <span class="visually-hidden">Previous</span>
+    <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Précédent</span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
-        <span class="visually-hidden">Next</span>
+    <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Suivant</span>
     </button>
 </div>
 
-<!-- Debug Information -->
-<div class="container mt-3 mb-4">
-    <div class="alert alert-info">
-        <h5>Carousel Verification</h5>
-        <p>Showing 3 banners located at: <code><?= SITE_URL ?>/img/banner/</code></p>
-        <div class="row">
-            <?php foreach ($banners as $index => $banner): 
-                $imgPath = $_SERVER['DOCUMENT_ROOT'] . '/img/banner/' . $banner[0];
-                $exists = file_exists($imgPath);
-            ?>
-            <div class="col-md-4 text-center">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h6><?= $banner[0] ?></h6>
-                        <p class="mb-2"><?= $exists ? '✅ Found' : '❌ Missing' ?></p>
-                        <?php if ($exists): ?>
-                        <img src="<?= SITE_URL ?>/img/banner/<?= $banner[0] ?>" 
-                             style="max-height: 80px; width: auto;" 
-                             class="img-fluid rounded">
-                        <?php endif; ?>
+<!-- How We Help Businesses Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Comment nous aidons les entreprises</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="bg-primary bg-opacity-10 p-3 rounded-circle d-inline-block mb-3">
+                            <i class="bi bi-graph-up text-primary"></i>
+                        </div>
+                        <h4>Amélioration de la productivité</h4>
+                        <p>Nos formations ciblées permettent à vos employés d'acquérir des compétences pratiques qui améliorent immédiatement leur performance au travail.</p>
                     </div>
                 </div>
             </div>
-            <?php endforeach; ?>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="bg-primary bg-opacity-10 p-3 rounded-circle d-inline-block mb-3">
+                            <i class="bi bi-people text-primary"></i>
+                        </div>
+                        <h4>Rétention des talents</h4>
+                        <p>Les employés qui bénéficient de développement professionnel sont plus engagés et plus susceptibles de rester dans votre entreprise.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="bg-primary bg-opacity-10 p-3 rounded-circle d-inline-block mb-3">
+                            <i class="bi bi-lightbulb text-primary"></i>
+                        </div>
+                        <h4>Innovation continue</h4>
+                        <p>En formant vos équipes aux dernières tendances et technologies, vous favorisez une culture d'innovation dans votre organisation.</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</section>
 
-<!-- Featured Courses Section -->
+<!-- Featured Courses -->
 <section class="py-5 bg-light">
     <div class="container">
-        <h2 class="text-center mb-5">Featured Courses</h2>
-        <?php if (!empty($featuredCourses)) : ?>
+        <h2 class="text-center mb-5">Cours en vedette</h2>
+        
+        <?php if (!empty($featured_courses)): ?>
             <div class="row g-4">
-                <?php foreach ($featuredCourses as $course): ?>
+                <?php foreach ($featured_courses as $course): ?>
                 <div class="col-md-4">
                     <div class="card h-100">
                         <?php if (!empty($course['image'])): ?>
-                            <img src="<?= SITE_URL ?>/uploads/courses/<?= htmlspecialchars($course['image']) ?>" 
+                            <img src="uploads/courses/<?= htmlspecialchars($course['image']) ?>" 
                                  class="card-img-top" 
                                  alt="<?= htmlspecialchars($course['title']) ?>">
                         <?php endif; ?>
                         <div class="card-body">
                             <h5 class="card-title"><?= htmlspecialchars($course['title']) ?></h5>
                             <p class="card-text"><?= htmlspecialchars($course['short_description']) ?></p>
-                            <a href="<?= SITE_URL ?>/courses/view.php?id=<?= $course['id'] ?>" 
+                            <a href="courses/course<?= $course['id'] ?>.php" 
                                class="btn btn-primary">
-                               View Details
+                               En savoir plus
                             </a>
                         </div>
                     </div>
@@ -117,16 +129,21 @@ $banners = [
                 <?php endforeach; ?>
             </div>
         <?php else: ?>
-            <div class="alert alert-warning">No featured courses found.</div>
+            <div class="alert alert-warning">Aucun cours vedette pour le moment.</div>
         <?php endif; ?>
+        
+        <div class="text-center mt-5">
+            <a href="courses.php" class="btn btn-outline-primary btn-lg">Voir tous nos cours</a>
+        </div>
     </div>
 </section>
 
-<!-- Testimonials Section -->
+<!-- Testimonials -->
 <section class="py-5">
     <div class="container">
-        <h2 class="text-center mb-5">What Our Clients Say</h2>
-        <?php if (!empty($testimonials)) : ?>
+        <h2 class="text-center mb-5">Ce que disent nos clients</h2>
+        
+        <?php if (!empty($testimonials)): ?>
             <div class="row">
                 <?php foreach ($testimonials as $testimonial): ?>
                 <div class="col-md-4 mb-4">
@@ -139,7 +156,7 @@ $banners = [
                             <p class="card-text">"<?= htmlspecialchars($testimonial['content']) ?>"</p>
                             <div class="d-flex align-items-center mt-auto">
                                 <?php if (!empty($testimonial['image'])): ?>
-                                    <img src="<?= SITE_URL ?>/uploads/testimonials/<?= htmlspecialchars($testimonial['image']) ?>" 
+                                    <img src="uploads/testimonials/<?= htmlspecialchars($testimonial['image']) ?>" 
                                          alt="<?= htmlspecialchars($testimonial['name']) ?>" 
                                          class="rounded-circle me-3" width="50">
                                 <?php endif; ?>
@@ -157,9 +174,53 @@ $banners = [
                 <?php endforeach; ?>
             </div>
         <?php else: ?>
-            <div class="alert alert-info">No testimonials available.</div>
+            <div class="alert alert-info">Aucun témoignage disponible pour le moment.</div>
         <?php endif; ?>
     </div>
 </section>
 
-<?php require_once 'includes/footer.php'; ?>
+<!-- Call to Action -->
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h2 class="mb-4">Prêt à transformer les compétences de votre équipe?</h2>
+        <p class="lead mb-4">Contactez-nous pour une consultation gratuite et découvrez comment nous pouvons répondre aux besoins spécifiques de votre entreprise.</p>
+        <a href="contact.php" class="btn btn-light btn-lg me-3">Nous contacter</a>
+        <a href="courses.php" class="btn btn-outline-light btn-lg">Explorer nos cours</a>
+    </div>
+</section>
+
+<?php
+require 'includes/footer.php';
+?>
+
+<script>
+// Initialize carousel with autoplay
+document.addEventListener('DOMContentLoaded', function() {
+    var carousel = new bootstrap.Carousel(document.getElementById('bannerCarousel'), {
+        interval: 5000,
+        wrap: true,
+        pause: false
+    });
+    
+    // Ensure all images are loaded before carousel starts
+    var carouselImages = document.querySelectorAll('#bannerCarousel img');
+    var imagesLoaded = 0;
+    
+    carouselImages.forEach(function(img) {
+        if (img.complete) {
+            imagesLoaded++;
+        } else {
+            img.addEventListener('load', function() {
+                imagesLoaded++;
+                if (imagesLoaded === carouselImages.length) {
+                    carousel.cycle();
+                }
+            });
+        }
+    });
+    
+    if (imagesLoaded === carouselImages.length) {
+        carousel.cycle();
+    }
+});
+</script>
