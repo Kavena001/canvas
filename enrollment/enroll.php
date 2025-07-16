@@ -3,15 +3,6 @@ require '../includes/config.php';
 require '../includes/db.php';
 require '../includes/header.php';
 
-// Error display at the top
-if (isset($_SESSION['error'])) {
-    echo '<div class="alert alert-danger alert-dismissible fade show mx-3 mt-3">
-            ' . $_SESSION['error'] . '
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>';
-    unset($_SESSION['error']);
-}
-
 $success = false;
 $courseId = isset($_GET['course_id']) ? (int)$_GET['course_id'] : 0;
 
@@ -35,41 +26,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $paymentMethod = trim($_POST['paymentOption']);
     $termsAccepted = isset($_POST['terms']) ? 1 : 0;
     
-    try {
-        // Validate required fields
-        if (empty($firstName) || empty($lastName) || empty($email) || empty($phone) || 
-            empty($company) || empty($position) || empty($paymentMethod) || !$termsAccepted) {
-            throw new Exception("Tous les champs obligatoires doivent être remplis");
-        }
-
-        // Validate email
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new Exception("L'adresse email n'est pas valide");
-        }
-
-        // Insert enrollment with transaction for safety
-        $db->beginTransaction();
-        
-        $sql = "INSERT INTO enrollment (course_id, first_name, last_name, email, phone, company, position, employee_count, payment_method, status) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')";
-        $params = [
-            $courseId, 
-            $firstName, 
-            $lastName, 
-            $email, 
-            $phone, 
-            $company, 
-            $position, 
-            $employeeCount, 
-            $paymentMethod
-        ];
-        
-        $insertSuccess = $db->insert($sql, $params);
-        
-        if (!$insertSuccess) {
-            throw new Exception("Échec de l'insertion dans la base de données");
-        }
-
+    // Insert enrollment
+    $sql = "INSERT INTO enrollment (course_id, first_name, last_name, email, phone, company, position, employee_count, payment_method, status) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')";
+    $params = [$courseId, $firstName, $lastName, $email, $phone, $company, $position, $employeeCount, $paymentMethod];
+    
+    if ($db->insert($sql, $params)) {
+        $success = true;
         $enrollmentId = $db->lastInsertId();
         
         // Store in session for admin notification
@@ -78,16 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'course' => $course['title'],
             'name' => "$firstName $lastName"
         ];
-        
-        $db->commit();
-        $success = true;
-        
-    } catch (Exception $e) {
-        $db->rollBack();
-        error_log("Enrollment Error: " . $e->getMessage());
-        $_SESSION['error'] = "Erreur lors de l'inscription: " . $e->getMessage();
-        header("Location: " . $_SERVER['HTTP_REFERER']);
-        exit;
     }
 }
 ?>
@@ -117,52 +70,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <!-- Personal Information -->
                         <div class="col-md-6">
                             <label for="firstName" class="form-label">Prénom *</label>
-                            <input type="text" class="form-control" id="firstName" name="firstName" 
-                                   value="<?= isset($_POST['firstName']) ? htmlspecialchars($_POST['firstName']) : '' ?>" required>
+                            <input type="text" class="form-control" id="firstName" name="firstName" required>
                             <div class="invalid-feedback">Veuillez entrer votre prénom.</div>
                         </div>
                         <div class="col-md-6">
                             <label for="lastName" class="form-label">Nom *</label>
-                            <input type="text" class="form-control" id="lastName" name="lastName" 
-                                   value="<?= isset($_POST['lastName']) ? htmlspecialchars($_POST['lastName']) : '' ?>" required>
+                            <input type="text" class="form-control" id="lastName" name="lastName" required>
                             <div class="invalid-feedback">Veuillez entrer votre nom.</div>
                         </div>
                         
                         <!-- Contact Information -->
                         <div class="col-md-6">
                             <label for="email" class="form-label">Email *</label>
-                            <input type="email" class="form-control" id="email" name="email" 
-                                   value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '' ?>" required>
+                            <input type="email" class="form-control" id="email" name="email" required>
                             <div class="invalid-feedback">Veuillez entrer une adresse email valide.</div>
                         </div>
                         <div class="col-md-6">
                             <label for="phone" class="form-label">Téléphone *</label>
-                            <input type="tel" class="form-control" id="phone" name="phone" 
-                                   value="<?= isset($_POST['phone']) ? htmlspecialchars($_POST['phone']) : '' ?>" required>
+                            <input type="tel" class="form-control" id="phone" name="phone" required>
                             <div class="invalid-feedback">Veuillez entrer votre numéro de téléphone.</div>
                         </div>
                         
                         <!-- Company Information -->
                         <div class="col-12">
                             <label for="company" class="form-label">Entreprise *</label>
-                            <input type="text" class="form-control" id="company" name="company" 
-                                   value="<?= isset($_POST['company']) ? htmlspecialchars($_POST['company']) : '' ?>" required>
+                            <input type="text" class="form-control" id="company" name="company" required>
                             <div class="invalid-feedback">Veuillez entrer le nom de votre entreprise.</div>
                         </div>
                         <div class="col-md-6">
                             <label for="position" class="form-label">Poste *</label>
-                            <input type="text" class="form-control" id="position" name="position" 
-                                   value="<?= isset($_POST['position']) ? htmlspecialchars($_POST['position']) : '' ?>" required>
+                            <input type="text" class="form-control" id="position" name="position" required>
                             <div class="invalid-feedback">Veuillez entrer votre poste.</div>
                         </div>
                         <div class="col-md-6">
                             <label for="employeeCount" class="form-label">Nombre d'employés</label>
                             <select class="form-select" id="employeeCount" name="employeeCount">
-                                <option value="1-10" <?= (isset($_POST['employeeCount']) && $_POST['employeeCount'] == '1-10') ? 'selected' : '' ?>>1-10</option>
-                                <option value="11-50" <?= (isset($_POST['employeeCount']) && $_POST['employeeCount'] == '11-50') ? 'selected' : '' ?>>11-50</option>
-                                <option value="51-200" <?= (isset($_POST['employeeCount']) && $_POST['employeeCount'] == '51-200') ? 'selected' : '' ?>>51-200</option>
-                                <option value="201-500" <?= (isset($_POST['employeeCount']) && $_POST['employeeCount'] == '201-500') ? 'selected' : '' ?>>201-500</option>
-                                <option value="500+" <?= (isset($_POST['employeeCount']) && $_POST['employeeCount'] == '500+') ? 'selected' : '' ?>>500+</option>
+                                <option value="1-10">1-10</option>
+                                <option value="11-50">11-50</option>
+                                <option value="51-200">51-200</option>
+                                <option value="201-500">201-500</option>
+                                <option value="500+">500+</option>
                             </select>
                         </div>
                         
@@ -170,15 +117,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="col-12 mt-4">
                             <h5>Options de paiement *</h5>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paymentOption" id="paymentCard" value="card" 
-                                    <?= (!isset($_POST['paymentOption']) || (isset($_POST['paymentOption']) && $_POST['paymentOption'] == 'card') ? 'checked' : '' ?> required>
+                                <input class="form-check-input" type="radio" name="paymentOption" id="paymentCard" value="card" checked required>
                                 <label class="form-check-label" for="paymentCard">
                                     Carte de crédit
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paymentOption" id="paymentInvoice" value="invoice" 
-                                    <?= (isset($_POST['paymentOption']) && $_POST['paymentOption'] == 'invoice') ? 'checked' : '' ?> required>
+                                <input class="form-check-input" type="radio" name="paymentOption" id="paymentInvoice" value="invoice" required>
                                 <label class="form-check-label" for="paymentInvoice">
                                     Facture (entreprises seulement)
                                 </label>
@@ -188,8 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <!-- Terms and Conditions -->
                         <div class="col-12 mt-3">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="terms" name="terms" 
-                                    <?= isset($_POST['terms']) ? 'checked' : '' ?> required>
+                                <input class="form-check-input" type="checkbox" id="terms" name="terms" required>
                                 <label class="form-check-label" for="terms">
                                     J'accepte les <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">conditions générales</a> *
                                 </label>
@@ -219,6 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <!-- Your terms content here -->
                 <h6>1. Politique d'annulation</h6>
                 <p>Les annulations effectuées plus de 14 jours avant le début du cours bénéficient d'un remboursement intégral...</p>
             </div>
