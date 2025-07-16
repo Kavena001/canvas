@@ -1,7 +1,7 @@
 <?php
-require '../../includes/config.php';
-require '../../includes/db.php';
-require '../../includes/header.php';
+require '../includes/config.php';
+require '../includes/db.php';
+require '../includes/header.php';
 
 $success = false;
 $courseId = isset($_GET['course_id']) ? (int)$_GET['course_id'] : 0;
@@ -27,15 +27,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $termsAccepted = isset($_POST['terms']) ? 1 : 0;
     
     // Insert enrollment
-    $sql = "INSERT INTO enrollments (course_id, first_name, last_name, email, phone, company, position, employee_count, payment_method, status) 
+    $sql = "INSERT INTO enrollment (course_id, first_name, last_name, email, phone, company, position, employee_count, payment_method, status) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')";
     $params = [$courseId, $firstName, $lastName, $email, $phone, $company, $position, $employeeCount, $paymentMethod];
     
     if ($db->insert($sql, $params)) {
         $success = true;
+        $enrollmentId = $db->lastInsertId();
         
-        // Send confirmation email (you would implement this)
-        // sendEnrollmentConfirmation($email, $firstName, $course['title']);
+        // Store in session for admin notification
+        $_SESSION['new_enrollment'] = [
+            'id' => $enrollmentId,
+            'course' => $course['title'],
+            'name' => "$firstName $lastName"
+        ];
     }
 }
 ?>
@@ -45,23 +50,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="text-center mb-5">
-                    <h2>Inscription au cours: <?php echo htmlspecialchars($course['title']); ?></h2>
-                    <p class="lead"><?php echo htmlspecialchars($course['short_description']); ?></p>
+                    <h2>Inscription au cours: <?= htmlspecialchars($course['title']) ?></h2>
+                    <p class="lead"><?= htmlspecialchars($course['short_description']) ?></p>
                 </div>
                 
                 <?php if ($success): ?>
                 <div id="enrollmentSuccess" class="alert alert-success">
                     <h4 class="alert-heading">Inscription confirmée!</h4>
-                    <p>Merci <?php echo htmlspecialchars($firstName); ?> pour votre inscription à notre cours "<?php echo htmlspecialchars($course['title']); ?>".</p>
+                    <p>Merci <?= htmlspecialchars($firstName) ?> pour votre inscription à notre cours "<?= htmlspecialchars($course['title']) ?>".</p>
                     <hr>
-                    <p class="mb-0">Nous vous avons envoyé un email de confirmation avec les détails de votre inscription.</p>
+                    <p class="mb-0">Un email de confirmation a été envoyé à <?= htmlspecialchars($email) ?>.</p>
+                    <div class="mt-3">
+                        <a href="../courses.php" class="btn btn-outline-primary">Voir d'autres cours</a>
+                    </div>
                 </div>
                 <?php else: ?>
                 <form id="enrollmentForm" method="POST" novalidate>
                     <div class="row g-3">
-                        <!-- Hidden course ID -->
-                        <input type="hidden" name="course_id" value="<?= $course['id'] ?>">
-                        
                         <!-- Personal Information -->
                         <div class="col-md-6">
                             <label for="firstName" class="form-label">Prénom *</label>
@@ -93,9 +98,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="invalid-feedback">Veuillez entrer le nom de votre entreprise.</div>
                         </div>
                         <div class="col-md-6">
-                            <label for="position" class="form-label">Poste/Titre *</label>
+                            <label for="position" class="form-label">Poste *</label>
                             <input type="text" class="form-control" id="position" name="position" required>
-                            <div class="invalid-feedback">Veuillez entrer votre poste/titre.</div>
+                            <div class="invalid-feedback">Veuillez entrer votre poste.</div>
                         </div>
                         <div class="col-md-6">
                             <label for="employeeCount" class="form-label">Nombre d'employés</label>
@@ -110,15 +115,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         
                         <!-- Payment Options -->
                         <div class="col-12 mt-4">
-                            <h5>Options de paiement</h5>
+                            <h5>Options de paiement *</h5>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paymentOption" id="paymentCard" value="card" checked>
+                                <input class="form-check-input" type="radio" name="paymentOption" id="paymentCard" value="card" checked required>
                                 <label class="form-check-label" for="paymentCard">
                                     Carte de crédit
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paymentOption" id="paymentInvoice" value="invoice">
+                                <input class="form-check-input" type="radio" name="paymentOption" id="paymentInvoice" value="invoice" required>
                                 <label class="form-check-label" for="paymentInvoice">
                                     Facture (entreprises seulement)
                                 </label>
@@ -132,13 +137,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <label class="form-check-label" for="terms">
                                     J'accepte les <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">conditions générales</a> *
                                 </label>
-                                <div class="invalid-feedback">Vous devez accepter les conditions générales.</div>
+                                <div class="invalid-feedback">Vous devez accepter les conditions.</div>
                             </div>
                         </div>
                         
                         <!-- Submit Button -->
                         <div class="col-12 mt-4">
                             <button class="btn btn-primary px-4 py-2" type="submit">Confirmer l'inscription</button>
+                            <a href="../course.php?id=<?= $courseId ?>" class="btn btn-outline-secondary ms-2">Retour</a>
                         </div>
                     </div>
                 </form>
@@ -148,27 +154,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </section>
 
-<!-- Terms and Conditions Modal -->
+<!-- Terms Modal -->
 <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="termsModalLabel">Conditions générales d'inscription</h5>
+                <h5 class="modal-title" id="termsModalLabel">Conditions générales</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <!-- Your terms content here -->
                 <h6>1. Politique d'annulation</h6>
                 <p>Les annulations effectuées plus de 14 jours avant le début du cours bénéficient d'un remboursement intégral...</p>
-                <!-- Rest of your terms content -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">J'ai compris</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
             </div>
         </div>
     </div>
 </div>
 
-<?php require '../../includes/footer.php'; ?>
+<?php require '../includes/footer.php'; ?>
 
 <script>
 // Form validation
@@ -186,13 +192,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }, false);
     }
     
-    // Set course info from localStorage if available
-    const storedCourseId = localStorage.getItem('selectedCourse');
-    const storedCourseTitle = localStorage.getItem('selectedCourseTitle');
-    
-    if (storedCourseId && storedCourseTitle) {
-        document.getElementById('courseTitleDisplay').textContent = storedCourseTitle;
-        document.querySelector('input[name="course_id"]').value = storedCourseId;
+    // Set course info from URL if coming from course page
+    const urlParams = new URLSearchParams(window.location.search);
+    const courseId = urlParams.get('course_id');
+    if (courseId) {
+        localStorage.setItem('selectedCourse', courseId);
     }
 });
 </script>
