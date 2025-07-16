@@ -1,7 +1,7 @@
 <?php
-require '../includes/config.php';
-require '../includes/db.php';
-require '../includes/header.php';
+require 'includes/config.php';
+require 'includes/db.php';
+require 'includes/header.php';
 
 // Get course ID from URL
 $courseId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -10,7 +10,7 @@ $courseId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $course = $db->getRow("SELECT * FROM courses WHERE id = ?", [$courseId]);
 
 if (!$course) {
-    header('Location: ../courses.php');
+    header('Location: courses.php');
     exit;
 }
 
@@ -30,7 +30,7 @@ if (!empty($course['objectives'])) {
                 <p class="lead"><?= htmlspecialchars($course['short_description']) ?></p>
             </div>
             <div class="col-md-4 text-end">
-                <a href="../enrollment/enroll.php?course_id=<?= $course['id'] ?>" 
+                <a href="enrollment/enroll.php?course_id=<?= $course['id'] ?>" 
                    class="btn btn-light btn-lg enroll-btn"
                    onclick="localStorage.setItem('selectedCourse', <?= $course['id'] ?>); localStorage.setItem('selectedCourseTitle', '<?= htmlspecialchars($course['title']) ?>')">
                    S'inscrire maintenant
@@ -45,7 +45,7 @@ if (!empty($course['objectives'])) {
     <div class="row">
         <div class="col-md-8">
             <?php if ($course['image']): ?>
-                <img src="../uploads/courses/<?= htmlspecialchars($course['image']) ?>" 
+                <img src="uploads/courses/<?= htmlspecialchars($course['image']) ?>" 
                      class="img-fluid mb-4" 
                      alt="<?= htmlspecialchars($course['title']) ?>">
             <?php endif; ?>
@@ -77,7 +77,7 @@ if (!empty($course['objectives'])) {
                     <p><strong>Niveau:</strong> <?= htmlspecialchars($course['level']) ?></p>
                     <p><strong>Langue:</strong> <?= htmlspecialchars($course['language'] ?? 'Français') ?></p>
                     <p><strong>Certificat:</strong> <?= $course['certificate'] ? 'Oui' : 'Non' ?></p>
-                    <a href="../enrollment/enroll.php?course_id=<?= $course['id'] ?>" 
+                    <a href="enrollment/enroll.php?course_id=<?= $course['id'] ?>" 
                        class="btn btn-primary w-100 mt-3 enroll-btn"
                        onclick="localStorage.setItem('selectedCourse', <?= $course['id'] ?>); localStorage.setItem('selectedCourseTitle', '<?= htmlspecialchars($course['title']) ?>')">
                        S'inscrire maintenant
@@ -88,7 +88,7 @@ if (!empty($course['objectives'])) {
     </div>
 </section>
 
-<?php require '../includes/footer.php'; ?>
+<?php require 'includes/footer.php'; ?>
 
 <script>
 // Store course info when enroll button is clicked
