@@ -37,7 +37,8 @@ $courses = $db->getRows("SELECT * FROM courses ORDER BY title LIMIT $perPage OFF
                     <?php if ($course['image']): ?>
                         <img src="uploads/courses/<?= htmlspecialchars($course['image']) ?>" 
                              class="card-img-top" 
-                             alt="<?= htmlspecialchars($course['title']) ?>">
+                             alt="<?= htmlspecialchars($course['title']) ?>"
+                             onerror="this.onerror=null;this.src='images/default-course.jpg'">
                     <?php else: ?>
                         <div class="bg-secondary" style="height: 200px; display: flex; align-items: center; justify-content: center;">
                             <span class="text-white">Pas d'image</span>
@@ -55,7 +56,8 @@ $courses = $db->getRows("SELECT * FROM courses ORDER BY title LIMIT $perPage OFF
                                 <?= htmlspecialchars($course['level']) ?>
                             </span>
                         </div>
-                        <a href="courses/course<?= $course['id'] ?>.php" class="btn btn-primary mt-3">
+                        <!-- UPDATED LINK HERE -->
+                        <a href="course.php?id=<?= $course['id'] ?>" class="btn btn-primary mt-3">
                             En savoir plus
                         </a>
                     </div>
