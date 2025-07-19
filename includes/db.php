@@ -6,21 +6,20 @@ class Database {
     private $lastError = '';
 
     public function __construct() {
+        $this->connect();
+    }
+
+    private function connect() {
         try {
-            $this->connection = @new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+            $this->connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
             
             if ($this->connection->connect_error) {
-                $this->lastError = "Connection failed: " . $this->connection->connect_error;
-                throw new Exception($this->lastError);
+                throw new Exception("Connection failed: " . $this->connection->connect_error);
             }
             
-            if (!$this->connection->set_charset("utf8mb4")) {
-                $this->lastError = "Charset error: " . $this->connection->error;
-                throw new Exception($this->lastError);
-            }
+            $this->connection->set_charset("utf8mb4");
         } catch (Exception $e) {
-            error_log("DB CONNECTION ERROR: " . $e->getMessage());
-            $this->lastError = $e->getMessage();
+            error_log("Database Connection Error: " . $e->getMessage());
             throw $e;
         }
     }
@@ -35,27 +34,24 @@ class Database {
             $stmt = $this->connection->prepare($sql);
             
             if (!$stmt) {
-                $this->lastError = "Prepare failed: " . $this->connection->error;
-                throw new Exception($this->lastError);
+                throw new Exception("Query preparation failed: " . $this->connection->error);
             }
             
             if (!empty($params)) {
                 $types = '';
                 foreach ($params as $param) {
                     if (is_int($param)) $types .= 'i';
-                    elseif (is_double($param)) $types .= 'd';
+                    elseif (is_float($param)) $types .= 'd';
                     else $types .= 's';
                 }
                 
                 if (!$stmt->bind_param($types, ...$params)) {
-                    $this->lastError = "Bind failed: " . $stmt->error;
-                    throw new Exception($this->lastError);
+                    throw new Exception("Parameter binding failed: " . $stmt->error);
                 }
             }
             
             if (!$stmt->execute()) {
-                $this->lastError = "Execute failed: " . $stmt->error;
-                throw new Exception($this->lastError);
+                throw new Exception("Query execution failed: " . $stmt->error);
             }
             
             $result = $stmt->get_result();
@@ -63,13 +59,33 @@ class Database {
             return $result;
             
         } catch (Exception $e) {
-            error_log("QUERY ERROR: $sql | " . $e->getMessage());
             $this->lastError = $e->getMessage();
+            error_log("Database Query Error: " . $e->getMessage() . " | SQL: $sql");
             return false;
         }
     }
 
-    // ... (keep other methods similar with the same error handling pattern)
+    public function getRow($sql, $params = []) {
+        try {
+            $result = $this->query($sql, $params);
+            return $result ? $result->fetch_assoc() : false;
+        } catch (Exception $e) {
+            $this->lastError = $e->getMessage();
+            error_log("Get Row Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getRows($sql, $params = []) {
+        try {
+            $result = $this->query($sql, $params);
+            return $result ? $result->fetch_all(MYSQLI_ASSOC) : false;
+        } catch (Exception $e) {
+            $this->lastError = $e->getMessage();
+            error_log("Get Rows Error: " . $e->getMessage());
+            return false;
+        }
+    }
 
     public function insert($sql, $params = []) {
         $this->lastError = '';
@@ -77,27 +93,24 @@ class Database {
             $stmt = $this->connection->prepare($sql);
             
             if (!$stmt) {
-                $this->lastError = "Prepare failed: " . $this->connection->error;
-                throw new Exception($this->lastError);
+                throw new Exception("Insert preparation failed: " . $this->connection->error);
             }
             
             if (!empty($params)) {
                 $types = '';
                 foreach ($params as $param) {
                     if (is_int($param)) $types .= 'i';
-                    elseif (is_double($param)) $types .= 'd';
+                    elseif (is_float($param)) $types .= 'd';
                     else $types .= 's';
                 }
                 
                 if (!$stmt->bind_param($types, ...$params)) {
-                    $this->lastError = "Bind failed: " . $stmt->error;
-                    throw new Exception($this->lastError);
+                    throw new Exception("Parameter binding failed: " . $stmt->error);
                 }
             }
             
             if (!$stmt->execute()) {
-                $this->lastError = "Execute failed: " . $stmt->error;
-                throw new Exception($this->lastError);
+                throw new Exception("Insert execution failed: " . $stmt->error);
             }
             
             $insertId = $stmt->insert_id;
@@ -105,21 +118,85 @@ class Database {
             return $insertId;
             
         } catch (Exception $e) {
-            error_log("INSERT ERROR: $sql | " . $e->getMessage());
             $this->lastError = $e->getMessage();
+            error_log("Database Insert Error: " . $e->getMessage());
             return false;
         }
     }
 
-    // ... (other methods remain with similar error handling)
+    public function update($sql, $params = []) {
+        $this->lastError = '';
+        try {
+            $stmt = $this->connection->prepare($sql);
+            
+            if (!$stmt) {
+                throw new Exception("Update preparation failed: " . $this->connection->error);
+            }
+            
+            if (!empty($params)) {
+                $types = '';
+                foreach ($params as $param) {
+                    if (is_int($param)) $types .= 'i';
+                    elseif (is_float($param)) $types .= 'd';
+                    else $types .= 's';
+                }
+                
+                if (!$stmt->bind_param($types, ...$params)) {
+                    throw new Exception("Parameter binding failed: " . $stmt->error);
+                }
+            }
+            
+            if (!$stmt->execute()) {
+                throw new Exception("Update execution failed: " . $stmt->error);
+            }
+            
+            $affectedRows = $stmt->affected_rows;
+            $stmt->close();
+            return $affectedRows;
+            
+        } catch (Exception $e) {
+            $this->lastError = $e->getMessage();
+            error_log("Database Update Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function beginTransaction() {
+        return $this->connection->begin_transaction();
+    }
+
+    public function commit() {
+        return $this->connection->commit();
+    }
+
+    public function rollBack() {
+        return $this->connection->rollback();
+    }
+
+    public function isConnected() {
+        return $this->connection && $this->connection->ping();
+    }
+
+    public function lastInsertId() {
+        return $this->connection->insert_id;
+    }
+
+    public function close() {
+        if ($this->connection) {
+            $this->connection->close();
+        }
+    }
+
+    public function __destruct() {
+        $this->close();
+    }
 }
 
-// Initialize with try-catch
+// Initialize with error handling
 try {
     $db = new Database();
 } catch (Exception $e) {
-    // Log detailed error but show generic message
-    error_log("FATAL DB ERROR: " . $e->getMessage());
+    error_log("Fatal Database Error: " . $e->getMessage());
     die("Database connection error. Please try again later.");
 }
 ?>
