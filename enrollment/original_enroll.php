@@ -26,26 +26,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $paymentMethod = trim($_POST['paymentOption']);
     $termsAccepted = isset($_POST['terms']) ? 1 : 0;
     
-    // Insert enrollment with all required fields
+    // Insert enrollment
     $sql = "INSERT INTO enrollment (course_id, first_name, last_name, email, phone, company, position, employee_count, payment_method, status) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    $params = [
-        $courseId, 
-        $firstName, 
-        $lastName, 
-        $email, 
-        $phone, 
-        $company, 
-        $position, 
-        $employeeCount, 
-        $paymentMethod,
-        'pending' // Explicitly setting status
-    ];
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')";
+    $params = [$courseId, $firstName, $lastName, $email, $phone, $company, $position, $employeeCount, $paymentMethod];
     
-    $enrollmentId = $db->insert($sql, $params);
-    
-    if ($enrollmentId) {
+    if ($db->insert($sql, $params)) {
         $success = true;
+        $enrollmentId = $db->lastInsertId();
         
         // Store in session for admin notification
         $_SESSION['new_enrollment'] = [
@@ -53,9 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'course' => $course['title'],
             'name' => "$firstName $lastName"
         ];
-    } else {
-        // Log error for debugging
-        error_log("Enrollment failed: " . print_r($_POST, true));
     }
 }
 ?>
@@ -178,6 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <!-- Your terms content here -->
                 <h6>1. Politique d'annulation</h6>
                 <p>Les annulations effectuées plus de 14 jours avant le début du cours bénéficient d'un remboursement intégral...</p>
             </div>
